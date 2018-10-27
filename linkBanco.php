@@ -3,10 +3,10 @@
 class linkBanco
 {
     function linkBanco() {
-        $user = 'root';
-        $pass = '';
-        $pdo = new PDO('mysql:host=localhost;dbname=teste', $user, $pass);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);  ;
+        $user = 'root';//usuario do banco
+        $pass = '';//senha do banco
+        $pdo = new PDO('mysql:host=localhost;dbname=teste', $user, $pass);//objeto com PDO
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);  
         return $pdo;
     }
 }

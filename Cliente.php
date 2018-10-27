@@ -1,14 +1,14 @@
-<link href="../css/style.css" rel="stylessheet" type="text/css" >
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-
+<link rel="stylesheet" href="css/bootstrap.css" type="text/css" />
+<script src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/script.js"></script> 
+<script type="text/javascript" src="js/jquery-ui.custom.min.js"></script> 
+<script src="/js/jqBootstrapValidation.js"></script></head>
 <?php
 
 include ('linkBanco.php');
 class Cliente
 {
     //Classe com os metodos e atributos referente ao cliente
-    
     //Atributos
     public $nome;
     public $telefone;
@@ -18,20 +18,43 @@ class Cliente
     public $senha;
     
     //Metodos
-    public function __construct($nome,$telefone,$nascimento,$rg,$cpf,$senha)
+    public function __construct()
     {
-        //Metodo construtor
-        $this->nome = $nome;
-        $this->telefone = $telefone;
-        $this->nascimento = $nascimento;
-        $this->rg = $rg;
-        $this->cpf = $cpf;
-        $this->senha = $senha;
+        
     }
+
     function __destruct()
     {
       //Metodo destrutor
     }
+    function logarCliente($nome,$senha)  //Metodo para logar no sistema
+    {
+        try{
+            $link = new linkBanco();
+            $pdo = ($link->linkBanco());
+            //Query que busca o login e a senha
+            $consulta = $pdo->query("SELECT nomeCadastro,senhaCadastro FROM cadastro WHERE nomeCadastro = '$nome' AND senhaCadastro = '$senha';") or die("Erro ao encontrar!");
+            //Atrubui o resultado da busca em $linha
+            $linha = $consulta->fetch(PDO::FETCH_ASSOC);
+            //Condicao para a session
+            if ($linha !=""){
+                if (!isset($_SESSION)) session_start();
+                $_SESSION['UsuarioNome'] = $linha['nomeCadastro'];
+                header("Location: login.php"); exit;
+            }else{
+                //Caso nao encontre o login ou a senha
+                $result='<div class="alert alert-danger" role="alert">
+               '.$nome.' inexistente e/ou senha incorreta, tente outro! Voltar a pagina princial <a href="index.html" class="alert-link"> HOME</a>.
+               </div>';
+                echo $result;
+                die();
+            }
+            echo $linha['nomeCadastro'],'    ', $linha['senhaCadastro'];
+        }catch(PDOException $e) {
+            echo 'Error: ' . $e->getMessage();
+        }
+    }
+    
     function gravarCliente($nome,$telefone,$nascimento,$rg,$cpf,$senha)//Metodo INSERT no banco
     {
         try {
@@ -43,11 +66,12 @@ class Cliente
            //Condicao para gravar no banco os dados 
            if($linha['nomeCadastro'] == $nome){ // Faz a comparação do resultado da consulta com a variavel a ser cadastrada
                //Mensagem de erro no cadastro
+               
                $result='<div class="alert alert-danger" role="alert">
                '.$nome.' ja cadastrado, tente outro! Voltar a pagina princial <a href="index.html" class="alert-link"> HOME</a>.
                </div>';
-           echo $result;
-                  
+               
+                 echo $result;
                     die();
                 }
                 else{
@@ -55,7 +79,7 @@ class Cliente
                 $stmt = $pdo->prepare('INSERT INTO cadastro(nomeCadastro,telefoneCadastro,nascimentoCadastro,rgCadastro,cpfCadastro,senhaCadastro) VALUES(:nome,:telefone,:nascimento,:rg,:cpf,:senha)');
                 $stmt->execute(array(':nome' => $nome, ':telefone' => $telefone, ':nascimento' => $nascimento, ':rg' => $rg, ':cpf' => $cpf, 'senha' => $senha));
                 
-                $result='<div class="alert alert-success" role="alert">'.$nome.'
+                $result='<div class="alert alert-success"  role="alert">'.$nome.'
                 cadastrado com sucesso! Voltar a pagina inicial<a href="index.html" class="alert-link"> HOME</a>.
                </div>';
                 echo $result;
@@ -71,7 +95,7 @@ class Cliente
     {
         $link = new linkBanco();
         $pdo = ($link->linkBanco());
-        $consulta = $pdo->query("SELECT nomeCadastro,telefoneCadastro FROM cadastro;");
+        $consulta = $pdo->query('SELECT nomeCadastro,telefoneCadastro FROM cadastro;');
         
         while ($linha = $consulta->fetch(PDO::FETCH_ASSOC)) {
             echo "<br />Nome: {$linha['nomeCadastro']} - Telefone: {$linha['telefoneCadastro']}<br />";
@@ -105,7 +129,9 @@ class Cliente
             echo 'Error: ' . $e->getMessage();
         }
     }
+
+    }
     
-}
+
 
 
