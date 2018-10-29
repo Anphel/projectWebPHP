@@ -18,7 +18,7 @@
 
 <h1>Login</h1>
 
-<form method="post" action="processaLogin.php">
+<form method="post" action="processaLogin.php" >
 <div class="form-group">
  <label for="exampleInputEmail1">Nome:</label>
 <input  type="text" class="form-control" placeholder="Digite seu nome aqui." name="nomeLogin" required ><br>
@@ -27,6 +27,8 @@
 <input type="submit" class="btn btn-primary" value="Login" id='login' name='btnLogin'>
 </div>
 </form>
+
+
 
 <h1>Cadastro</h1>
 
