@@ -20,7 +20,7 @@ if (!isset($_SESSION['UsuarioID'])) {
 
 <nav class="nav nav-pills nav-justified">
   <a class="nav-link active" href="index.php">Home</a>
-  <a class="nav-link" href="lerCliente.php">Ler cliente</a>
+  <a class="nav-link" href="lerCliente.php">Ler cliente</a><br>
   <a class="nav-link" href="atualizarCliente.php">Atualizar cliente</a>
   <a class="nav-link" href="logout.php">Sair</a>
 </nav>

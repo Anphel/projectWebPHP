@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head >
@@ -27,9 +28,6 @@
 <input type="submit" class="btn btn-primary" value="Login" id='login' name='btnLogin'>
 </div>
 </form>
-
-
-
 <h1>Cadastro</h1>
 
 <form method="post" action="processaCadastro.php">

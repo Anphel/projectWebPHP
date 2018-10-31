@@ -87,19 +87,34 @@ class Cliente
             echo $linkboots."<p><strong> ID:</strong>{$linha['idCadastro']}<strong> Nome:</strong>{$linha['nomeCadastro']}<strong> Telefone:</strong> {$linha['telefoneCadastro']}<strong> Nascimento:</strong>{$linha['nascimentoCadastro']}<strong> RG:</strong>{$linha['rgCadastro']}<strong> CPF:</strong>{$linha['cpfCadastro']}<p><br>";
 }
     }
-    function atualizarCliente($id,$nome,$telefone,$nascimento,$rg,$cpf,$senha) //Metodo para UPDATE no banco
+    function atualizarCliente($id,$nome,$telefone) //Metodo para UPDATE no banco
     {
-        try {
-            $link = new linkBanco();
-            $pdo = ($link->linkBanco());
-            $stmt = $pdo->prepare('UPDATE cadastro SET nomeCadastro = :nome WHERE id = :id');
-            $stmt->execute(array(':id'   => $id,':nome' => $nome));
-          
-            echo $stmt->rowCount();
-        } catch(PDOException $e) {
-            echo 'Error: ' . $e->getMessage();
+        $link = new linkBanco();
+        $pdo = ($link->linkBanco());
+        $consulta = $pdo->query('SELECT idCadastro FROM cadastro;');
+        $controlador = False;
+        while ($linha = $consulta->fetch(PDO::FETCH_ASSOC)) {
+            if ($linha['idCadastro'] == $id){
+                $controlador = True;
+            try {
+                $link = new linkBanco();
+                $pdo = ($link->linkBanco());
+                $stmt = $pdo->prepare("UPDATE cadastro SET nomeCadastro = :nome , telefoneCadastro = :telefone WHERE idCadastro = '$id'");
+                $stmt->execute(array(':nome'   => $nome,':telefone' => $telefone));
+                echo"Alteracao realizada com sucesso!";
+                die();
+            }catch(PDOException $e){
+                    echo 'Error: ' . $e->getMessage();
+                }
+            }
         }
-    }
+        if($controlador == False){
+            echo"ID nao encontrada, por favor insira outro!";
+        }
+      }
+        
+
+        
     function deletarCliente($id)  //Metodo para DELET no banco
     { 
         try {
@@ -108,9 +123,8 @@ class Cliente
             $stmt = $pdo->prepare('DELETE FROM cadastro WHERE idCadastro = :id');
             $stmt->bindParam(':id', $id);
             $stmt->execute();
-            
             echo $stmt->rowCount();
-        } catch(PDOException $e) {
+        } catch(PDOException $e){
             echo 'Error: ' . $e->getMessage();
         }
     }
