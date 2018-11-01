@@ -36,7 +36,7 @@ class Cliente
                 echo $result;
                 die();
             }
-        }catch(PDOException $e) {
+        }catch(PDOException $e) { //cath para mostrar na tela mensagem de erro caso haja
             echo 'Error: ' . $e->getMessage();
         }
     }
@@ -55,7 +55,6 @@ class Cliente
                $result='<link rel="stylesheet" href="css/bootstrap.css" type="text/css" /><div class="alert alert-danger" role="alert">
                Alguns dados ja cadastrados, tente outros! Voltar a pagina princial <a href="index.php" class="alert-link"> HOME</a>.
                </div>';
-               
                  echo $result;
                     die();
                 }
@@ -63,7 +62,6 @@ class Cliente
                 //Inserindo no banco usando statement pdo
                 $stmt = $pdo->prepare('INSERT INTO cadastro(nomeCadastro,telefoneCadastro,nascimentoCadastro,rgCadastro,cpfCadastro,senhaCadastro) VALUES(:nome,:telefone,:nascimento,:rg,:cpf,:senha)');
                 $stmt->execute(array(':nome' => $nome, ':telefone' => $telefone, ':nascimento' => $nascimento, ':rg' => $rg, ':cpf' => $cpf, 'senha' => $senha));
-                
                 $result='<link rel="stylesheet" href="css/bootstrap.css" type="text/css" /><div class="alert alert-success"  role="alert">'.$nome.'
                 cadastrado com sucesso! Voltar a pagina inicial<a href="index.php" class="alert-link"> HOME</a>.
                </div>';
@@ -87,22 +85,22 @@ class Cliente
             echo $linkboots."<p><strong> ID:</strong>{$linha['idCadastro']}<strong> Nome:</strong>{$linha['nomeCadastro']}<strong> Telefone:</strong> {$linha['telefoneCadastro']}<strong> Nascimento:</strong>{$linha['nascimentoCadastro']}<strong> RG:</strong>{$linha['rgCadastro']}<strong> CPF:</strong>{$linha['cpfCadastro']}<p><br>";
 }
     }
-    function atualizarCliente($id,$nome,$telefone) //Metodo para UPDATE no banco
+    function atualizarCliente($id,$nome,$telefone,$nascimento,$rg,$cpf) //Metodo para UPDATE no banco
     {
         $link = new linkBanco();
         $pdo = ($link->linkBanco());
-        $consulta = $pdo->query('SELECT idCadastro FROM cadastro;');
-        $controlador = False;
+        $consulta = $pdo->query('SELECT idCadastro FROM cadastro;');//realiza select do id para comparar com o id digitado
+        $controlador = False;//variavel controladora para verificar se o id foi encontrado
         while ($linha = $consulta->fetch(PDO::FETCH_ASSOC)) {
             if ($linha['idCadastro'] == $id){
-                $controlador = True;
+                $controlador = True;//atribui o valor para a variavel controladora
             try {
-                $link = new linkBanco();
-                $pdo = ($link->linkBanco());
-                $stmt = $pdo->prepare("UPDATE cadastro SET nomeCadastro = :nome , telefoneCadastro = :telefone WHERE idCadastro = '$id'");
-                $stmt->execute(array(':nome'   => $nome,':telefone' => $telefone));
-                echo"Alteracao realizada com sucesso!";
-                die();
+                //query para dar update no banco os dados recebidos pela funcao
+                $stmt = $pdo->prepare("UPDATE cadastro SET nomeCadastro = :nome , telefoneCadastro = :telefone ,nascimentoCadastro = :nascimento , rgCadastro = :rg, cpfCadastro = :cpf WHERE idCadastro = '$id'");
+                $stmt->execute(array(':nome'   => $nome,':telefone' => $telefone,':nascimento'   => $nascimento,':rg'   => $rg,':cpf'   => $cpf));
+                echo'<link rel="stylesheet" href="css/bootstrap.css" type="text/css" /><div class="alert alert-success" role="alert">
+               Atualizado com sucesso, <a href="login.php" class="alert-link"> CLIQUE AQUI!</a>
+               </div>';
             }catch(PDOException $e){
                     echo 'Error: ' . $e->getMessage();
                 }
@@ -112,21 +110,31 @@ class Cliente
             echo"ID nao encontrada, por favor insira outro!";
         }
       }
-        
-
-        
     function deletarCliente($id)  //Metodo para DELET no banco
     { 
-        try {
-            $link = new linkBanco();
-            $pdo = ($link->linkBanco());
-            $stmt = $pdo->prepare('DELETE FROM cadastro WHERE idCadastro = :id');
-            $stmt->bindParam(':id', $id);
-            $stmt->execute();
-            echo $stmt->rowCount();
-        } catch(PDOException $e){
-            echo 'Error: ' . $e->getMessage();
+        $link = new linkBanco();
+        $pdo = ($link->linkBanco());
+        $consulta = $pdo->query('SELECT idCadastro FROM cadastro;');//realiza select do id para comparar com o id digitado
+        $controlador = False;//variavel controladora para verificar se o id foi encontrado
+        
+        while ($linha = $consulta->fetch(PDO::FETCH_ASSOC)) {
+            if ($linha['idCadastro'] == $id){
+                $controlador = True;//atribui o valor para a variavel controladora
+                try {
+                    //Query para realizar o DELETE na tabela cadastro
+                    $stmt = $pdo->prepare('DELETE FROM cadastro WHERE idCadastro = :id');
+                    $stmt->bindParam(':id', $id);
+                    $stmt->execute();
+            echo'<link rel="stylesheet" href="css/bootstrap.css" type="text/css" /><div class="alert alert-success" role="alert">
+               Deletado com sucesso, <a href="login.php" class="alert-link"> CLIQUE AQUI!</a>
+               </div>';
+                }catch(PDOException $e){
+                    echo 'Error: ' . $e->getMessage();
+                }
+            }
+        }
+        if($controlador == False){
+            echo"ID nao encontrada, por favor insira outro!";
         }
     }
-
     }
