@@ -1,0 +1,32 @@
+@charset "ISO-8859-1";
+
+body{
+}
+.principal{
+margin-left:25%;	
+margin-top:5%;
+padding-left:8%;
+height:50%;
+width:50%;
+background-color:#80ff80;
+box-shadow: 5px 6px Black;
+position:relative;
+border: 2px solid #80ff80;
+-webkit-border-radius: 20px;
+}
+.principal a{
+	position:relative;
+	display: inline;
+	}
+.principal form{
+	
+	position:relative;
+}
+.lerCliente{
+	
+}
+.lerCliente a{
+	position:relative;
+	display: inline;
+	
+}

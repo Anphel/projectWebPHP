@@ -36,7 +36,7 @@ class Cliente
                 echo $result;
                 die();
             }
-        }catch(PDOException $e) { //cath para mostrar na tela mensagem de erro caso haja
+        }catch(PDOException $e) { //cath para mostrar na tela mensagem de erro caso ocorra
             echo 'Error: ' . $e->getMessage();
         }
     }
@@ -46,12 +46,10 @@ class Cliente
             $link = new linkBanco(); // Faz o link com o banco
             $pdo = ($link->linkBanco());
             $consulta = $pdo->query("SELECT nomeCadastro,telefoneCadastro,rgCadastro,cpfCadastro FROM cadastro WHERE nomeCadastro ='$nome' OR telefoneCadastro='$telefone' OR rgCadastro='$rg' OR cpfCadastro='$cpf';"); // Faz a consulta de Query
-            
             $linha = $consulta->fetch(PDO::FETCH_ASSOC); // Coloca em uma variavel o resultado da consulta
            //Condicao para gravar no banco os dados 
             if($linha['nomeCadastro'] == $nome || $linha['telefoneCadastro'] == $telefone || $linha['rgCadastro'] == $rg || $linha['cpfCadastro'] == $cpf){ // Faz a comparação do resultado da consulta com a variavel a ser cadastrada
                //Mensagem de erro no cadastro
-               
                $result='<link rel="stylesheet" href="css/bootstrap.css" type="text/css" /><div class="alert alert-danger" role="alert">
                Alguns dados ja cadastrados, tente outros! Voltar a pagina princial <a href="index.php" class="alert-link"> HOME</a>.
                </div>';
@@ -82,7 +80,7 @@ class Cliente
         
         while ($linha = $consulta->fetch(PDO::FETCH_ASSOC)) {
             $linkboots='<link rel="stylesheet" href="css/bootstrap.css" type="text/css" />';
-            echo $linkboots."<p><strong> ID:</strong>{$linha['idCadastro']}<strong> Nome:</strong>{$linha['nomeCadastro']}<strong> Telefone:</strong> {$linha['telefoneCadastro']}<strong> Nascimento:</strong>{$linha['nascimentoCadastro']}<strong> RG:</strong>{$linha['rgCadastro']}<strong> CPF:</strong>{$linha['cpfCadastro']}<p><br>";
+            echo $linkboots."<p><strong> ID:</strong>{$linha['idCadastro']}<strong> Nome:</strong>{$linha['nomeCadastro']}<strong> Telefone:</strong> {$linha['telefoneCadastro']}<strong> Nascimento:</strong>{$linha['nascimentoCadastro']}<strong> RG:</strong>{$linha['rgCadastro']}<strong> CPF:</strong>{$linha['cpfCadastro']}<strong> Saldo:</strong>{$linha['saldoCadastro']}<p><br>";
 }
     }
     function atualizarCliente($id,$nome,$telefone,$nascimento,$rg,$cpf) //Metodo para UPDATE no banco
@@ -137,4 +135,37 @@ class Cliente
             echo"ID nao encontrada, por favor insira outro!";
         }
     }
+    function add_saldoCliente($id,$saldo){
+        $link = new linkBanco(); // Faz o link com o banco
+        $pdo = ($link->linkBanco());
+        $consulta = $pdo->query("SELECT idCadastro,saldoCadastro FROM cadastro WHERE idCadastro ='$id'"); // Faz a consulta de Query
+        $controlador = False;//variavel controladora para verificar se o id foi encontrado
+        $linha = $consulta->fetch(PDO::FETCH_ASSOC); // Coloca em uma variavel o resultado da consulta
+        
+        if($linha['idCadastro'] == $id && $linha['saldoCadastro']>= 0){
+            $controlador = True;//atribui o valor para a variavel controladora
+            $saldo += $linha['saldoCadastro'];
+            try {
+                //query para dar update no banco os dados recebidos pela funcao
+                $stmt = $pdo->prepare("UPDATE cadastro SET saldoCadastro = '$saldo' WHERE idCadastro = '$id'");
+                echo'<link rel="stylesheet" href="css/bootstrap.css" type="text/css" /><div class="alert alert-success" role="alert">
+               Saldo atualizado com sucesso, <a href="login.php" class="alert-link"> CLIQUE AQUI!</a>
+               </div>';
+            }catch(PDOException $e){
+                echo 'Error: ' . $e->getMessage();
+            }
+            
+        }
+        if($controlador == False){
+            echo"ID nao encontrada, por favor insira outro!";
+        }
+    }
+    
+    
+    
+    
+    
+    
+    
+    
     }

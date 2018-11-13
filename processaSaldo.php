@@ -9,15 +9,6 @@ if (!isset($_SESSION['UsuarioID'])) {
     header("Location:index.php");
     exit;
 }
-?>
-<link rel="stylesheet" href="css/bootstrap.css" type="text/css" />
-<link rel="stylesheet" href="css/estilo.css" type="text/css" />
-<div class="lerCliente">
-<div class="alert alert-dark" role="alert">Clientes cadastrados </div>
-<a href="login.php"><input type="submit" class="btn btn-primary" value="Voltar"/></a>
-</div>
-<?php
 include ('Cliente.php');
 $perfil = new Cliente();
-$perfil->lerCliente();
-?>
+$perfil->add_saldoCliente($_POST['id'],$_POST['saldo']);

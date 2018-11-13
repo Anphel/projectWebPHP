@@ -22,6 +22,7 @@ if (!isset($_SESSION['UsuarioID'])) {
   <a class="nav-link" href="lerCliente.php">Ler cliente</a><br>
   <a class="nav-link" href="#" data-toggle="modal" data-target="#deletarModal" data-whatever="@mdo">Deletar cliente</a>
   <a class="nav-link" href="#" data-toggle="modal" data-target="#atualizarModal" data-whatever="@mdo">Atualizar cliente</a>
+  <a class="nav-link" href="#" data-toggle="modal" data-target="#saldoModal" data-whatever="@mdo">Saldo cliente</a>
   <a class="nav-link" href="logout.php">Sair</a>
 </nav>
 <body>
@@ -87,6 +88,34 @@ Bem vindo(a), <?php echo $_SESSION['UsuarioNome']; ?>!
   </div>
 </div>
 <!--fim modal Deletar -->
+
+<!--modal Saldo -->
+<div class="modal fade" id="saldoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Deletar cliente</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="processaSaldo.php">
+		<div class="form-group">
+<input  type="text" class="form-control" placeholder="ID" name="id" required autofocus ><br>
+<input  type="text" class="form-control" placeholder="Saldo" name="saldo" required ><br>
+		</div>
+		<div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <input type="submit" class="btn btn-primary" value="Concluir" id='Saldo' name='btnSaldo'>
+        </div>
+      </form>
+      </div>
+      
+    </div>
+  </div>
+</div>
+<!--fim modal Saldo -->
 
 
 
