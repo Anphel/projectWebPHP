@@ -26,8 +26,16 @@ if (!isset($_SESSION['UsuarioID'])) {
   <a class="nav-link" href="logout.php">Sair</a>
 </nav>
 <body>
-<div class="alert alert-success" role="alert">
-Bem vindo(a), <?php echo $_SESSION['UsuarioNome']; ?>!
+
+<div class="card" style="width: 18rem;">
+  <img class="card-img-top" src="http://fenhance.com/images/signup/img-default.png" alt="Cap">
+  <div class="card-body">
+    <h5 class="card-title">Bem vindo(a), <?php echo $_SESSION['UsuarioNome']; ?>!</h5>
+   <div class="custom-file">
+  <input type="file" class="custom-file-input" id="customFile">
+  <label class="custom-file-label" for="customFile">Escolha o arquivo. </label>
+</div>
+  </div>
 </div>
 
 

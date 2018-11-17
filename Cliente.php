@@ -154,7 +154,6 @@ class Cliente
             }catch(PDOException $e){
                 echo 'Error: ' . $e->getMessage();
             }
-            
         }
         if($controlador == False){
             echo"ID nao encontrada, por favor insira outro!";

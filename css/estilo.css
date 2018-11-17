@@ -8,10 +8,10 @@ margin-top:5%;
 padding-left:8%;
 height:50%;
 width:50%;
-background-color:#80ff80;
+background-color:#c0c0c0;
 box-shadow: 5px 6px Black;
 position:relative;
-border: 2px solid #80ff80;
+border: 2px solid #c0c0c0;
 -webkit-border-radius: 20px;
 }
 .principal a{
@@ -23,7 +23,6 @@ border: 2px solid #80ff80;
 	position:relative;
 }
 .lerCliente{
-	
 }
 .lerCliente a{
 	position:relative;

@@ -50,9 +50,10 @@
 <input  type="text" class="form-control" placeholder="RG" name="rg" ><br>
 <input  type="text" class="form-control" placeholder="CPF" name="cpf" required ><br>
 <input  type="password" class="form-control" placeholder="Senha" name="senha" required ><br>
+
 </div>
 		<div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
         <input type="submit" class="btn btn-primary" value="Cadastrar" id='cadastrar' name='btnCadastrar'>
         </div>
       </form>
