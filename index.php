@@ -30,7 +30,6 @@
 </div>
 </form>
 
-
 <!--modal Cadastro -->
 <div class="modal fade" id="atualizarModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">

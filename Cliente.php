@@ -12,20 +12,23 @@ class Cliente
     {
       //Metodo destrutor
     }
+
     function logarCliente($nome,$senha)  //Metodo para logar no sistema
     {
         try{
             $link = new linkBanco();
             $pdo = ($link->linkBanco());
             //Query que busca o login e a senha
-            $consulta = $pdo->query("SELECT idCadastro,nomeCadastro,senhaCadastro FROM cadastro WHERE nomeCadastro = '$nome' AND senhaCadastro = '$senha';") or die("Erro ao encontrar!");
+            $consulta = $pdo->query("SELECT idCadastro,nomeCadastro,senhaCadastro,diretorio_fotoCadastro FROM cadastro WHERE nomeCadastro = '$nome' AND senhaCadastro = '$senha';") or die("Erro ao encontrar!");
             //Atrubui o resultado da busca em $linha
             $linha = $consulta->fetch(PDO::FETCH_ASSOC);
+
             //Condicao para a session
             if ($linha !=""){
                 if (!isset($_SESSION)) session_start();
                 $_SESSION['UsuarioID'] = $linha['idCadastro'];
                 $_SESSION['UsuarioNome'] = $linha['nomeCadastro'];
+                $_SESSION['UsuarioFoto'] = $linha['diretorio_fotoCadastro'];
                 header("Location:login.php"); exit;
             }else{
                 //Caso nao encontre o login ou a senha
@@ -147,7 +150,8 @@ class Cliente
             $saldo += $linha['saldoCadastro'];
             try {
                 //query para dar update no banco os dados recebidos pela funcao
-                $stmt = $pdo->prepare("UPDATE cadastro SET saldoCadastro = '$saldo' WHERE idCadastro = '$id'");
+                $stmt = $pdo->prepare("UPDATE cadastro SET saldoCadastro = :saldo WHERE idCadastro = :id");
+                $stmt->execute(array(':saldo'   => $saldo,':id' => $id));
                 echo'<link rel="stylesheet" href="css/bootstrap.css" type="text/css" /><div class="alert alert-success" role="alert">
                Saldo atualizado com sucesso, <a href="login.php" class="alert-link"> CLIQUE AQUI!</a>
                </div>';
@@ -159,12 +163,58 @@ class Cliente
             echo"ID nao encontrada, por favor insira outro!";
         }
     }
+    function uploadFoto($submit,$id){
+
+    $currentDir = getcwd();
+    $uploadDirectory = "/upload/";// Diretorio de upload
+    $errors = []; // Guarda erros
+    $fileExtensions = ['jpeg','jpg','png']; // Extencoes dos arquivos
+    $fileName = $_FILES['myfile']['name'];
+    $fileSize = $_FILES['myfile']['size'];
+    $fileTmpName  = $_FILES['myfile']['tmp_name'];
+    $fileType = $_FILES['myfile']['type'];
+    $fileExtension = strtolower(end(explode('.',$fileName)));
+
+    $uploadPath = $currentDir . $uploadDirectory . basename($fileName); 
     
-    
-    
-    
-    
-    
-    
-    
+
+    $pontos = array("C:","\x","ampp\htdocs");
+    $result = str_replace($pontos, "", $uploadPath);
+   
+    if (isset($submit)) {
+        if (! in_array($fileExtension,$fileExtensions)) {
+            $errors[] = "This file extension is not allowed. Please upload a JPEG or PNG file";
+        }
+        if ($fileSize > 2000000) {
+            $errors[] = "This file is more than 2MB. Sorry, it has to be less than or equal to 2MB";
+        }
+        if (empty($errors)) {
+            $didUpload = move_uploaded_file($fileTmpName, $uploadPath);
+            if ($didUpload) {
+
+                $link = new linkBanco();
+                $pdo = ($link->linkBanco());
+                try {
+                //query para dar update no banco os dados recebidos pela funcao
+                $stmt = $pdo->prepare("UPDATE cadastro SET diretorio_fotoCadastro = :diretorio  WHERE idCadastro = :id");
+                $stmt->execute(array(':diretorio'  => $result,':id' => $id));
+                echo'<link rel="stylesheet" href="css/bootstrap.css" type="text/css" /><div class="alert alert-success" role="alert">
+               O Arquivo,' . basename($fileName) . 'foi salvo <a href="login.php" class="alert-link"> CLIQUE AQUI!</a>
+               </div>';
+            }catch(PDOException $e){
+                    echo 'Error: ' . $e->getMessage();
+                }
+                
+            } else {
+                echo "An error occurred somewhere. Try again or contact the admin";
+            }
+        } else {
+            foreach ($errors as $error) {
+                echo $error . "These are the errors" . "\n";
+            }
+        }
+    }
+
+    }
+
     }

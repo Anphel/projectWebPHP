@@ -6,9 +6,11 @@ if (!isset($_SESSION['UsuarioID'])) {
     session_destroy();
     // Redireciona o visitante de volta pro login
     // Usuário não logado! Redireciona para a página de login
+
     header("Location:index.php");
     exit;
 }
+
 ?>
 <head>
 <link rel="stylesheet" href="css/style.css" type="text/css" />
@@ -26,19 +28,19 @@ if (!isset($_SESSION['UsuarioID'])) {
   <a class="nav-link" href="logout.php">Sair</a>
 </nav>
 <body>
+<div class="card" style="width: 20rem;">
 
-<div class="card" style="width: 18rem;">
-  <img class="card-img-top" src="http://fenhance.com/images/signup/img-default.png" alt="Cap">
-  <div class="card-body">
-    <h5 class="card-title">Bem vindo(a), <?php echo $_SESSION['UsuarioNome']; ?>!</h5>
-   <div class="custom-file">
-  <input type="file" class="custom-file-input" id="customFile">
-  <label class="custom-file-label" for="customFile">Escolha o arquivo. </label>
-</div>
+      <img class="card-img-top" src="<?php echo $_SESSION['UsuarioFoto'] ?>" alt="Cap"/>
+      <div class="card-body">
+       <h5 class="card-title"><strong> Bem vindo(a), <?php echo $_SESSION['UsuarioNome'] ?>!</strong></h5>
+       <form action="upload.php" method="post" enctype="multipart/form-data">
+        
+        <input type="file" name="myfile" id="fileToUpload">
+        <input type="submit" name="submit" value="Carregar" >
+    </form>     
   </div>
 </div>
-
-
+      
 <!--modal Atualizar -->
 <div class="modal fade" id="atualizarModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
