@@ -19,18 +19,19 @@ class Cliente
             $link = new linkBanco();
             $pdo = ($link->linkBanco());
             //Query que busca o login e a senha
-            $consulta = $pdo->query("SELECT idCadastro,nomeCadastro,senhaCadastro,diretorio_fotoCadastro FROM cadastro WHERE nomeCadastro = '$nome' AND senhaCadastro = '$senha';") or die("Erro ao encontrar!");
+            $consulta = $pdo->query("SELECT idCadastro,nomeCadastro,senhaCadastro,diretorio_fotoCadastro,tipoCadastro FROM cadastro WHERE nomeCadastro = '$nome' AND senhaCadastro = '$senha';") or die("Erro ao encontrar!");
             //Atrubui o resultado da busca em $linha
             $linha = $consulta->fetch(PDO::FETCH_ASSOC);
 
             //Condicao para a session
-            if ($linha !=""){
-                if (!isset($_SESSION)) session_start();
+            if ($linha['idCadastro'] != '' ){
+                    if (!isset($_SESSION)) session_start();
                 $_SESSION['UsuarioID'] = $linha['idCadastro'];
+                $_SESSION['UsuarioTipo'] = $linha['tipoCadastro'];
                 $_SESSION['UsuarioNome'] = $linha['nomeCadastro'];
-                $_SESSION['UsuarioFoto'] = $linha['diretorio_fotoCadastro'];
+                $_SESSION['UsuarioFoto'] = $linha['diretorio_fotoCadastro'];//Session para armazenar o caminho da foto de perfil
                 header("Location:login.php"); exit;
-            }else{
+                }else{
                 //Caso nao encontre o login ou a senha
                 $result='<link rel="stylesheet" href="css/bootstrap.css" type="text/css" />
                <div class="alert alert-danger" role="alert">
@@ -61,8 +62,8 @@ class Cliente
                 }
                 else{
                 //Inserindo no banco usando statement pdo
-                $stmt = $pdo->prepare('INSERT INTO cadastro(nomeCadastro,telefoneCadastro,nascimentoCadastro,rgCadastro,cpfCadastro,senhaCadastro) VALUES(:nome,:telefone,:nascimento,:rg,:cpf,:senha)');
-                $stmt->execute(array(':nome' => $nome, ':telefone' => $telefone, ':nascimento' => $nascimento, ':rg' => $rg, ':cpf' => $cpf, 'senha' => $senha));
+                $stmt = $pdo->prepare('INSERT INTO cadastro(nomeCadastro,telefoneCadastro,nascimentoCadastro,rgCadastro,cpfCadastro,senhaCadastro,diretorio_fotoCadastro,tipoCadastro) VALUES(:nome,:telefone,:nascimento,:rg,:cpf,:senha,:diretorio_fotoCadastro,:tipoCadastro)');
+                $stmt->execute(array(':nome' => $nome, ':telefone' => $telefone, ':nascimento' => $nascimento, ':rg' => $rg, ':cpf' => $cpf, 'senha' => $senha,':diretorio_fotoCadastro' => '\projectWebPHP/upload/DefaultUser.jpg', ':tipoCadastro' => 1));
                 $result='<link rel="stylesheet" href="css/bootstrap.css" type="text/css" /><div class="alert alert-success"  role="alert">'.$nome.'
                 cadastrado com sucesso! Voltar a pagina inicial<a href="index.php" class="alert-link"> HOME</a>.
                </div>';
@@ -177,16 +178,15 @@ class Cliente
 
     $uploadPath = $currentDir . $uploadDirectory . basename($fileName); 
     
-
     $pontos = array("C:","\x","ampp\htdocs");
-    $result = str_replace($pontos, "", $uploadPath);
+    $result = str_replace($pontos, "", $uploadPath);//funcao para retirar parte do caminho que vai ser salvo no banco, pois o caminho completo nao funciona em localhost
    
     if (isset($submit)) {
         if (! in_array($fileExtension,$fileExtensions)) {
-            $errors[] = "This file extension is not allowed. Please upload a JPEG or PNG file";
+            $errors[] = "Esse tipo de arquivo não é aceito, por favor carregie um JPEG ou PNG";
         }
         if ($fileSize > 2000000) {
-            $errors[] = "This file is more than 2MB. Sorry, it has to be less than or equal to 2MB";
+            $errors[] = "Esse arquivo tem mais de 2MB. Lementamos, porem o arquivo dever ter menos de 2MB";
         }
         if (empty($errors)) {
             $didUpload = move_uploaded_file($fileTmpName, $uploadPath);
@@ -198,19 +198,21 @@ class Cliente
                 //query para dar update no banco os dados recebidos pela funcao
                 $stmt = $pdo->prepare("UPDATE cadastro SET diretorio_fotoCadastro = :diretorio  WHERE idCadastro = :id");
                 $stmt->execute(array(':diretorio'  => $result,':id' => $id));
+                $_SESSION['UsuarioFoto'] = $result;
                 echo'<link rel="stylesheet" href="css/bootstrap.css" type="text/css" /><div class="alert alert-success" role="alert">
                O Arquivo,' . basename($fileName) . 'foi salvo <a href="login.php" class="alert-link"> CLIQUE AQUI!</a>
                </div>';
+
             }catch(PDOException $e){
                     echo 'Error: ' . $e->getMessage();
                 }
                 
             } else {
-                echo "An error occurred somewhere. Try again or contact the admin";
+                echo "Ocorreu algum erro, tente novamente ou contate um administrador.";
             }
         } else {
             foreach ($errors as $error) {
-                echo $error . "These are the errors" . "\n";
+                echo $error . "Esse sao os erros" . "\n";
             }
         }
     }

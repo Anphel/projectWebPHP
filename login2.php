@@ -1,12 +1,13 @@
 <?php
 if (!isset($_SESSION)) session_start();
-// Verifica se não há a variável da sessão que identifica o usuário
-$nivel_necessario = 1;
-if (!isset($_SESSION['UsuarioID']) OR ($_SESSION['UsuarioTipo'] < $nivel_necessario) ) {
-    // Destrói a sessão por segurança
+// Verifica se nÃ£o hÃ¡ a variÃ¡vel da sessÃ£o que identifica o usuÃ¡rio
+
+if (!isset($_SESSION['UsuarioID'])) {
+    // DestrÃ³i a sessÃ£o por seguranÃ§a
+    session_destroy();
     // Redireciona o visitante de volta pro login
-    // Usuário não logado! Redireciona para a página de login
-    header("Location:login2.php");
+    // UsuÃ¡rio nÃ£o logado! Redireciona para a pÃ¡gina de login
+    header("Location:index.php");
     exit;
 }
 ?>
@@ -20,9 +21,9 @@ if (!isset($_SESSION['UsuarioID']) OR ($_SESSION['UsuarioTipo'] < $nivel_necessa
 <nav class="nav nav-pills nav-justified">
   <a class="nav-link active" href="index.php">Home</a>
   <a class="nav-link" href="lerCliente.php">Ler cliente</a><br>
-  <a class="nav-link" href="#" data-toggle="modal" data-target="#deletarModal" data-whatever="@mdo">Deletar cliente</a>
-  <a class="nav-link" href="#" data-toggle="modal" data-target="#atualizarModal" data-whatever="@mdo">Atualizar cliente</a>
-  <a class="nav-link" href="#" data-toggle="modal" data-target="#saldoModal" data-whatever="@mdo">Saldo cliente</a>
+  <a class="nav-link" href="#" data-toggle="modal" data-target="#deletarModal" data-whatever="@mdo" >Deletar cliente</a>
+  <a class="nav-link" href="#" data-toggle="modal" data-target="#atualizarModal" data-whatever="@mdo" >Atualizar cliente</a>
+  <a class="nav-link" href="#" data-toggle="modal" data-target="#saldoModal" data-whatever="@mdo" >Saldo cliente</a>
   <a class="nav-link" href="logout.php">Sair</a>
 </nav>
 <body>
@@ -56,11 +57,10 @@ if (!isset($_SESSION['UsuarioID']) OR ($_SESSION['UsuarioTipo'] < $nivel_necessa
 <input  type="text" class="form-control" placeholder="Nascimento" name="nascimento" ><br>
 <input  type="text" class="form-control" placeholder="RG" name="rg" required><br>
 <input  type="text" class="form-control" placeholder="CPF" name="cpf" required ><br>
-<in
 </div>
 		<div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <input type="submit" class="btn btn-primary" value="Atualizar" id='atualizar' name='btnAtualizar'>
+        <input type="submit" class="btn btn-primary" value="Atualizar" id='atualizar' name='btnAtualizar' disabled>
         </div>
       </form>
       </div>
@@ -86,7 +86,7 @@ if (!isset($_SESSION['UsuarioID']) OR ($_SESSION['UsuarioTipo'] < $nivel_necessa
 		</div>
 		<div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <input type="submit" class="btn btn-primary" value="Deletar" id='Deletar' name='btnDeletar'>
+        <input type="submit" class="btn btn-primary" value="Deletar" id='Deletar' name='btnDeletar' disabled>
         </div>
       </form>
       </div>
@@ -101,7 +101,7 @@ if (!isset($_SESSION['UsuarioID']) OR ($_SESSION['UsuarioTipo'] < $nivel_necessa
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Deletar cliente</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Saldo cliente</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -114,7 +114,7 @@ if (!isset($_SESSION['UsuarioID']) OR ($_SESSION['UsuarioTipo'] < $nivel_necessa
 		</div>
 		<div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <input type="submit" class="btn btn-primary" value="Concluir" id='Saldo' name='btnSaldo'>
+        <input type="submit" class="btn btn-primary" value="Concluir" id='Saldo' name='btnSaldo' disabled>
         </div>
       </form>
       </div>
