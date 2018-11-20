@@ -9,7 +9,7 @@ if (!isset($_SESSION['UsuarioID']) OR ($_SESSION['UsuarioTipo'] < $nivel_necessa
     header("Location:login2.php");
     exit;
 }
-}
+
 include ('Cliente.php');
 $perfil = new Cliente();
 $perfil->atualizarCliente($_POST['id'], $_POST['nome'],$_POST['telefone'],$_POST['nascimento'],$_POST['rg'],$_POST['cpf']);

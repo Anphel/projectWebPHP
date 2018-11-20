@@ -204,9 +204,9 @@ echo "</table>";
     $fileExtension = strtolower(end(explode('.',$fileName)));
 
     $uploadPath = $currentDir . $uploadDirectory . basename($fileName); 
-    
-    $pontos = array("C:","\x","ampp\htdocs");
-    $result = str_replace($pontos, "", $uploadPath);//funcao para retirar parte do caminho que vai ser salvo no banco, pois o caminho completo nao funciona em localhost
+
+   // $pontos = array("C:","\x","ampp\htdocs");
+   // $result = str_replace($pontos, "", $uploadPath);//funcao para retirar parte do caminho que vai ser salvo no banco, pois o caminho completo nao funciona em localhost
    
     if (isset($submit)) {
         if (! in_array($fileExtension,$fileExtensions)) {
@@ -223,11 +223,13 @@ echo "</table>";
                 $pdo = ($link->linkBanco());
                 try {
                 //query para dar update no banco os dados recebidos pela funcao
+
+                    $diretorio = "https://anphel2.000webhostapp.com/upload/".$fileName;
                 $stmt = $pdo->prepare("UPDATE cadastro SET diretorio_fotoCadastro = :diretorio  WHERE idCadastro = :id");
-                $stmt->execute(array(':diretorio'  => $result,':id' => $id));
+                $stmt->execute(array(':diretorio'  => $diretorio,':id' => $id));
                 $_SESSION['UsuarioFoto'] = $result;
                 echo'<link rel="stylesheet" href="css/bootstrap.css" type="text/css" /><div class="alert alert-success" role="alert">
-               O Arquivo,' . basename($fileName) . 'foi salvo <a href="login.php" class="alert-link"> CLIQUE AQUI!</a>
+               O Arquivo, ' . basename($fileName) . ' foi salvo <a href="login.php" class="alert-link"> CLIQUE AQUI!</a>
                </div>';
 
             }catch(PDOException $e){

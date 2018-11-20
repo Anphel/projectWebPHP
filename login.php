@@ -1,4 +1,5 @@
 <?php
+
 if (!isset($_SESSION)) session_start();
 // Verifica se n�o h� a vari�vel da sess�o que identifica o usu�rio
 $nivel_necessario = 1;
@@ -56,7 +57,7 @@ if (!isset($_SESSION['UsuarioID']) OR ($_SESSION['UsuarioTipo'] < $nivel_necessa
 <input  type="text" class="form-control" placeholder="Nascimento" name="nascimento" ><br>
 <input  type="text" class="form-control" placeholder="RG" name="rg" required><br>
 <input  type="text" class="form-control" placeholder="CPF" name="cpf" required ><br>
-<in
+
 </div>
 		<div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
