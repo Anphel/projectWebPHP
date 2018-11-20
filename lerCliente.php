@@ -13,11 +13,18 @@ if (!isset($_SESSION['UsuarioID'])) {
 <link rel="stylesheet" href="css/bootstrap.css" type="text/css" />
 <link rel="stylesheet" href="css/estilo.css" type="text/css" />
 <div class="lerCliente">
-<div class="alert alert-dark" role="alert">Clientes cadastrados </div>
-<a href="login.php"><input type="submit" class="btn btn-primary" value="Voltar"/></a>
+
+<div class="alert alert-dark" role="alert"><strong>Clientes cadastrados</strong><a href="login.php"><input type="submit" class="btn btn-primary" value="Voltar" style="margin-left: 85%;" /></a> </div>
+
 </div>
+
 <?php
 include ('Cliente.php');
 $perfil = new Cliente();
 $perfil->lerCliente();
+
+
+
+
+
 ?>

@@ -78,14 +78,41 @@ class Cliente
     }
     function lerCliente() //Metodo para SELECT do banco
     {
+
+        //<a href="login.php"><input type="submit" class="btn btn-primary" value="Voltar"/></a>
         $link = new linkBanco();
         $pdo = ($link->linkBanco());
         $consulta = $pdo->query('SELECT * FROM cadastro;');
-        
+        echo "<table class='table'>
+  <thead class='thead-dark'>
+    <tr>
+      <th scope='col'>ID</th>
+      <th scope='col'>Tipo</th>
+      <th scope='col'>Nome</th>
+      <th scope='col'>Telefone</th>
+      <th scope='col'>RG</th>
+      <th scope='col'>CPF</th>
+      <th scope='col'>Saldo</th>
+     
+    </tr>
+  </thead> 
+  <tbody>";
         while ($linha = $consulta->fetch(PDO::FETCH_ASSOC)) {
             $linkboots='<link rel="stylesheet" href="css/bootstrap.css" type="text/css" />';
-            echo $linkboots."<p><strong> ID:</strong>{$linha['idCadastro']}<strong> Nome:</strong>{$linha['nomeCadastro']}<strong> Telefone:</strong> {$linha['telefoneCadastro']}<strong> Nascimento:</strong>{$linha['nascimentoCadastro']}<strong> RG:</strong>{$linha['rgCadastro']}<strong> CPF:</strong>{$linha['cpfCadastro']}<strong> Saldo:</strong>{$linha['saldoCadastro']}<p><br>";
+            echo $linkboots."
+    <tr>
+      <th scope='row'>{$linha['idCadastro']}</th>
+      <td>{$linha['tipoCadastro']}</td>
+      <td>{$linha['nomeCadastro']}</td>
+      <td>{$linha['telefoneCadastro']}</td>
+      <td>{$linha['rgCadastro']}</td>
+      <td>{$linha['cpfCadastro']}</td>
+      <td>{$linha['saldoCadastro']} R$</td>
+    </tr>
+  </tbody>
+";
 }
+echo "</table>";
     }
     function atualizarCliente($id,$nome,$telefone,$nascimento,$rg,$cpf) //Metodo para UPDATE no banco
     {
