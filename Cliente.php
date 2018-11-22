@@ -61,9 +61,10 @@ class Cliente
                     die();
                 }
                 else{
+
                 //Inserindo no banco usando statement pdo
                 $stmt = $pdo->prepare('INSERT INTO cadastro(nomeCadastro,telefoneCadastro,nascimentoCadastro,rgCadastro,cpfCadastro,senhaCadastro,diretorio_fotoCadastro,tipoCadastro) VALUES(:nome,:telefone,:nascimento,:rg,:cpf,:senha,:diretorio_fotoCadastro,:tipoCadastro)');
-                $stmt->execute(array(':nome' => $nome, ':telefone' => $telefone, ':nascimento' => $nascimento, ':rg' => $rg, ':cpf' => $cpf, 'senha' => $senha,':diretorio_fotoCadastro' => '\projectWebPHP/upload/DefaultUser.jpg', ':tipoCadastro' => 1));
+                $stmt->execute(array(':nome' => $nome, ':telefone' => $telefone, ':nascimento' => $nascimento, ':rg' => $rg, ':cpf' => $cpf, 'senha' => $senha,':diretorio_fotoCadastro' => 'https://anphel2.000webhostapp.com/upload/DefaultUser.jpg', ':tipoCadastro' => 1));
                 $result='<link rel="stylesheet" href="css/bootstrap.css" type="text/css" /><div class="alert alert-success"  role="alert">'.$nome.'
                 cadastrado com sucesso! Voltar a pagina inicial<a href="index.php" class="alert-link"> HOME</a>.
                </div>';
@@ -78,28 +79,13 @@ class Cliente
     }
     function lerCliente() //Metodo para SELECT do banco
     {
-
-        //<a href="login.php"><input type="submit" class="btn btn-primary" value="Voltar"/></a>
+       
         $link = new linkBanco();
         $pdo = ($link->linkBanco());
         $consulta = $pdo->query('SELECT * FROM cadastro;');
-        echo "<table class='table'>
-  <thead class='thead-dark'>
-    <tr>
-      <th scope='col'>ID</th>
-      <th scope='col'>Tipo</th>
-      <th scope='col'>Nome</th>
-      <th scope='col'>Telefone</th>
-      <th scope='col'>RG</th>
-      <th scope='col'>CPF</th>
-      <th scope='col'>Saldo</th>
-     
-    </tr>
-  </thead> 
-  <tbody>";
+
         while ($linha = $consulta->fetch(PDO::FETCH_ASSOC)) {
-            $linkboots='<link rel="stylesheet" href="css/bootstrap.css" type="text/css" />';
-            echo $linkboots."
+            echo"
     <tr>
       <th scope='row'>{$linha['idCadastro']}</th>
       <td>{$linha['tipoCadastro']}</td>
@@ -108,6 +94,8 @@ class Cliente
       <td>{$linha['rgCadastro']}</td>
       <td>{$linha['cpfCadastro']}</td>
       <td>{$linha['saldoCadastro']} R$</td>
+      <td><button type='button' class='btn btn-secondary'>Alterar</button>
+      <button type='button' class='btn btn-secondary'>Excluir</button></td>
     </tr>
   </tbody>
 ";
@@ -218,16 +206,14 @@ echo "</table>";
         if (empty($errors)) {
             $didUpload = move_uploaded_file($fileTmpName, $uploadPath);
             if ($didUpload) {
-
                 $link = new linkBanco();
                 $pdo = ($link->linkBanco());
                 try {
                 //query para dar update no banco os dados recebidos pela funcao
-
-                    $diretorio = "https://anphel2.000webhostapp.com/upload/".$fileName;
+                $diretorio = "https://anphel2.000webhostapp.com/upload/".$fileName;
                 $stmt = $pdo->prepare("UPDATE cadastro SET diretorio_fotoCadastro = :diretorio  WHERE idCadastro = :id");
                 $stmt->execute(array(':diretorio'  => $diretorio,':id' => $id));
-                $_SESSION['UsuarioFoto'] = $result;
+                $_SESSION['UsuarioFoto'] = $diretorio ;
                 echo'<link rel="stylesheet" href="css/bootstrap.css" type="text/css" /><div class="alert alert-success" role="alert">
                O Arquivo, ' . basename($fileName) . ' foi salvo <a href="login.php" class="alert-link"> CLIQUE AQUI!</a>
                </div>';

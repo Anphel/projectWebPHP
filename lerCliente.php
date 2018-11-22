@@ -17,14 +17,22 @@ if (!isset($_SESSION['UsuarioID'])) {
 <div class="alert alert-dark" role="alert"><strong>Clientes cadastrados</strong><a href="login.php"><input type="submit" class="btn btn-primary" value="Voltar" style="margin-left: 85%;" /></a> </div>
 
 </div>
-
+<table class='table'>
+  <thead class='thead-dark'>
+    <tr>
+      <th scope='col'>ID</th>
+      <th scope='col'>Tipo</th>
+      <th scope='col'>Nome</th>
+      <th scope='col'>Telefone</th>
+      <th scope='col'>RG</th>
+      <th scope='col'>CPF</th>
+      <th scope='col'>Saldo</th>
+     <th scope='col'></th>
+    </tr>
+  </thead> 
+  <tbody>
 <?php
 include ('Cliente.php');
 $perfil = new Cliente();
 $perfil->lerCliente();
-
-
-
-
-
 ?>
