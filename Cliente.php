@@ -219,7 +219,7 @@ echo "</table>";
                </div>';
 
             }catch(PDOException $e){
-                    echo 'Error: ' . $e->getMessage();
+                   // echo 'Error: ' . $e->getMessage();
                 }
                 
             } else {
