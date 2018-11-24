@@ -44,8 +44,18 @@ class Cliente
             echo 'Error: ' . $e->getMessage();
         }
     }
-    function gravarCliente($nome,$telefone,$nascimento,$rg,$cpf,$senha)//Metodo INSERT no banco
+    function gravarCliente($nome,$telefone,$nascimento,$email,$rg,$cpf,$senha)//Metodo INSERT no banco
     {
+
+
+
+
+
+
+
+
+
+
         try {
             $link = new linkBanco(); // Faz o link com o banco
             $pdo = ($link->linkBanco());
@@ -82,25 +92,11 @@ class Cliente
        
         $link = new linkBanco();
         $pdo = ($link->linkBanco());
-        $consulta = $pdo->query('SELECT * FROM cadastro;');
+        $stmt = $pdo->prepare('SELECT * FROM cadastro;');
+        
+        $stmt->execute(array("%$query%"));
+        return $data = $stmt->fetchAll();
 
-        while ($linha = $consulta->fetch(PDO::FETCH_ASSOC)) {
-            echo"
-    <tr>
-      <th scope='row'>{$linha['idCadastro']}</th>
-      <td>{$linha['tipoCadastro']}</td>
-      <td>{$linha['nomeCadastro']}</td>
-      <td>{$linha['telefoneCadastro']}</td>
-      <td>{$linha['rgCadastro']}</td>
-      <td>{$linha['cpfCadastro']}</td>
-      <td>{$linha['saldoCadastro']} R$</td>
-      <td><button type='button' class='btn btn-secondary'>Alterar</button>
-      <button type='button' class='btn btn-secondary'>Excluir</button></td>
-    </tr>
-  </tbody>
-";
-}
-echo "</table>";
     }
     function atualizarCliente($id,$nome,$telefone,$nascimento,$rg,$cpf) //Metodo para UPDATE no banco
     {

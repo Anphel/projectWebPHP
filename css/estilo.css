@@ -1,7 +1,13 @@
 @charset "ISO-8859-1";
 
-body{
-	
+body {
+  
+}
+
+@media (min-width: 992px) {
+  body {
+    
+  }
 }
 .principal{
 margin-left:25%;	
