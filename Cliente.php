@@ -44,22 +44,13 @@ class Cliente
             echo 'Error: ' . $e->getMessage();
         }
     }
-    function gravarCliente($nome,$telefone,$nascimento,$email,$rg,$cpf,$senha)//Metodo INSERT no banco
+    function gravarCliente($nome,$telefone,$nascimento,$rg,$cpf,$email,$senha)//Metodo INSERT no banco
     {
-
-
-
-
-
-
-
-
-
 
         try {
             $link = new linkBanco(); // Faz o link com o banco
             $pdo = ($link->linkBanco());
-            $consulta = $pdo->query("SELECT nomeCadastro,telefoneCadastro,rgCadastro,cpfCadastro FROM cadastro WHERE nomeCadastro ='$nome' OR telefoneCadastro='$telefone' OR rgCadastro='$rg' OR cpfCadastro='$cpf';"); // Faz a consulta de Query
+            $consulta = $pdo->query("SELECT nomeCadastro,telefoneCadastro,rgCadastro,cpfCadastro,emailCadastro FROM cadastro WHERE nomeCadastro ='$nome' OR telefoneCadastro='$telefone' OR rgCadastro='$rg' OR cpfCadastro='$cpf';"); // Faz a consulta de Query
             $linha = $consulta->fetch(PDO::FETCH_ASSOC); // Coloca em uma variavel o resultado da consulta
            //Condicao para gravar no banco os dados 
             if($linha['nomeCadastro'] == $nome || $linha['telefoneCadastro'] == $telefone || $linha['rgCadastro'] == $rg || $linha['cpfCadastro'] == $cpf){ // Faz a comparação do resultado da consulta com a variavel a ser cadastrada
@@ -73,8 +64,8 @@ class Cliente
                 else{
 
                 //Inserindo no banco usando statement pdo
-                $stmt = $pdo->prepare('INSERT INTO cadastro(nomeCadastro,telefoneCadastro,nascimentoCadastro,rgCadastro,cpfCadastro,senhaCadastro,diretorio_fotoCadastro,tipoCadastro) VALUES(:nome,:telefone,:nascimento,:rg,:cpf,:senha,:diretorio_fotoCadastro,:tipoCadastro)');
-                $stmt->execute(array(':nome' => $nome, ':telefone' => $telefone, ':nascimento' => $nascimento, ':rg' => $rg, ':cpf' => $cpf, 'senha' => $senha,':diretorio_fotoCadastro' => 'https://anphel2.000webhostapp.com/upload/DefaultUser.jpg', ':tipoCadastro' => 1));
+                $stmt = $pdo->prepare('INSERT INTO cadastro(nomeCadastro,telefoneCadastro,nascimentoCadastro,rgCadastro,cpfCadastro,senhaCadastro,diretorio_fotoCadastro,tipoCadastro,emailCadastro) VALUES(:nome,:telefone,:nascimento,:rg,:cpf,:senha,:diretorio_fotoCadastro,:tipoCadastro,:email)');
+                $stmt->execute(array(':nome' => $nome, ':telefone' => $telefone, ':nascimento' => $nascimento, ':rg' => $rg, ':cpf' => $cpf, 'senha' => $senha,':diretorio_fotoCadastro' => 'https://anphel2.000webhostapp.com/upload/DefaultUser.jpg', ':tipoCadastro' => 1, ':email' => $email));
                 $result='<link rel="stylesheet" href="css/bootstrap.css" type="text/css" /><div class="alert alert-success"  role="alert">'.$nome.'
                 cadastrado com sucesso! Voltar a pagina inicial<a href="index.php" class="alert-link"> HOME</a>.
                </div>';
@@ -93,12 +84,12 @@ class Cliente
         $link = new linkBanco();
         $pdo = ($link->linkBanco());
         $stmt = $pdo->prepare('SELECT * FROM cadastro;');
-        
-        $stmt->execute(array("%$query%"));
+        $query = "";
+        $stmt->execute(array($query));
         return $data = $stmt->fetchAll();
 
     }
-    function atualizarCliente($id,$nome,$telefone,$nascimento,$rg,$cpf) //Metodo para UPDATE no banco
+    function atualizarCliente($id,$nome,$telefone,$nascimento,$rg,$cpf,$email) //Metodo para UPDATE no banco
     {
         $link = new linkBanco();
         $pdo = ($link->linkBanco());
@@ -109,8 +100,8 @@ class Cliente
                 $controlador = True;//atribui o valor para a variavel controladora
             try {
                 //query para dar update no banco os dados recebidos pela funcao
-                $stmt = $pdo->prepare("UPDATE cadastro SET nomeCadastro = :nome , telefoneCadastro = :telefone ,nascimentoCadastro = :nascimento , rgCadastro = :rg, cpfCadastro = :cpf WHERE idCadastro = '$id'");
-                $stmt->execute(array(':nome'   => $nome,':telefone' => $telefone,':nascimento'   => $nascimento,':rg'   => $rg,':cpf'   => $cpf));
+                $stmt = $pdo->prepare("UPDATE cadastro SET nomeCadastro = :nome , telefoneCadastro = :telefone ,nascimentoCadastro = :nascimento , rgCadastro = :rg, cpfCadastro = :cpf , emailCadastro = :email WHERE idCadastro = '$id'");
+                $stmt->execute(array(':nome'   => $nome,':telefone' => $telefone,':nascimento'   => $nascimento,':rg'   => $rg,':cpf'   => $cpf,':email'   => $email));
                 echo'<link rel="stylesheet" href="css/bootstrap.css" type="text/css" /><div class="alert alert-success" role="alert">
                Atualizado com sucesso, <a href="login.php" class="alert-link"> CLIQUE AQUI!</a>
                </div>';

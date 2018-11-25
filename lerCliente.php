@@ -29,12 +29,7 @@ if (!isset($_SESSION['UsuarioID'])) {
       <li class="nav-item">
         <a class="nav-link" href="lerCliente.php">Ler cliente</a>
       </li>
-       <li class="nav-item">
-        <a class="nav-link" href="#" data-toggle="modal" data-target="#deletarModal" data-whatever="@mdo">Deletar cliente</a>
-      </li>
-       <li class="nav-item">
-        <a class="nav-link" href="#" data-toggle="modal" data-target="#atualizarModal" data-whatever="@mdo">Atualizar cliente</a>
-      </li>
+       
        <li class="nav-item">
         <a class="nav-link" href="#" data-toggle="modal" data-target="#saldoModal" data-whatever="@mdo">Saldo cliente</a>
       </li>
@@ -46,65 +41,6 @@ if (!isset($_SESSION['UsuarioID'])) {
     
   </div>
 </nav>
-<!--NAV-->
-<!--modal Atualizar -->
-<div class="modal fade" id="atualizarModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Atualizar cliente</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form method="post" action="processaAtualizar.php">
-<div class="form-group">
-<input  type="text" class="form-control" placeholder="ID" name="id" required autofocus ><br>
-<input  type="text" class="form-control" placeholder="Nome" name="nome" required><br>
-<input  type="text" class="form-control" placeholder="Telefone" name="telefone" ><br>
-<input  type="text" class="form-control" placeholder="Nascimento" name="nascimento" ><br>
-<input  type="text" class="form-control" placeholder="RG" name="rg" required><br>
-<input  type="text" class="form-control" placeholder="CPF" name="cpf" required ><br>
-
-</div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <input type="submit" class="btn btn-primary" value="Atualizar" id='atualizar' name='btnAtualizar'>
-        </div>
-      </form>
-      </div>
-      
-    </div>
-  </div>
-</div>
-<!--fim modal Atualizar -->
-<!--modal Deletar -->
-<div class="modal fade" id="deletarModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Deletar cliente</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form method="post" action="processaDeletar.php">
-    <div class="form-group">
-<input  type="text" class="form-control" placeholder="ID" name="id" required autofocus ><br>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <input type="submit" class="btn btn-primary" value="Deletar" id='Deletar' name='btnDeletar'>
-        </div>
-      </form>
-      </div>
-      
-    </div>
-  </div>
-</div>
-<!--fim modal Deletar -->
 
 <!--modal Saldo -->
 <div class="modal fade" id="saldoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -144,11 +80,12 @@ if (!isset($_SESSION['UsuarioID'])) {
       <th scope='col'>Tipo</th>
       <th scope='col'>Nome</th>
       <th scope='col'>Telefone</th>
+      <th scope='col'>Nascimento</th>
       <th scope='col'>RG</th>
       <th scope='col'>CPF</th>
-      <th scope='col'>Saldo</th>
       <th scope='col'>Email</th>
-     <th scope='col'></th>
+      <th scope='col'>Saldo</th>
+      <th scope='col'></th>
     </tr>
   </thead> 
   <tbody>
@@ -166,8 +103,75 @@ $data = $perfil->lerCliente();?>
     <td><?=$row['rgCadastro']?></td>
     <td><?=$row['cpfCadastro']?></td>
     <td><?=$row['emailCadastro']?></td>
+    <td><?=$row['saldoCadastro']?></td>
+    <!--modal Atualizar -->
+<div class="modal fade" id="atualizar<?=$row['idCadastro']?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Atualizar cliente</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="processaAtualizar.php">
+<div class="form-group">
+<input  type="text" class="form-control" placeholder="ID" name="id" value="<?=$row['idCadastro']?>" ><br>
+<input  type="text" class="form-control" placeholder="Nome" value="<?=$row['nomeCadastro']?>" name="nome" required><br>
+<input  type="text" class="form-control" placeholder="Telefone" value="<?=$row['telefoneCadastro']?>" name="telefone" ><br>
+<input  type="text" class="form-control" placeholder="Nascimento" value="<?=$row['nascimentoCadastro']?>" name="nascimento" ><br>
+<input  type="text" class="form-control" placeholder="RG" value="<?=$row['rgCadastro']?>" name="rg" required><br>
+<input  type="text" class="form-control" placeholder="CPF" value="<?=$row['cpfCadastro']?>" name="cpf" required ><br>
+<input  type="text" class="form-control" placeholder="Email" value="<?=$row['emailCadastro']?>" name="email" required><br>
+</div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <input type="submit" class="btn btn-primary" value="Atualizar" id='atualizar' name='btnAtualizar'>
+        </div>
+      </form>
+      </div>
+      
+    </div>
+  </div>
+</div>
+<!--fim modal Atualizar -->
+<!--modal Deletar -->
+<div class="modal fade" id="deletar<?=$row['idCadastro']?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Deletar cliente</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="processaDeletar.php">
+    <div class="form-group">
+<input  type="" class="form-control" placeholder="ID" name="id" value="<?=$row['idCadastro']?>" ><br>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Nao</button>
+        <input type="submit" class="btn btn-success" value="Sim" id='Deletar' name='btnDeletar'>
+        </div>
+      </form>
+      </div>
+      
+    </div>
+  </div>
+</div>
+<!--fim modal Deletar -->
+    <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#atualizar<?=$row['idCadastro']?>" data-whatever="@mdo">Editar</button>
+        <button type="button" class="btn btn-danger"  data-toggle="modal" data-target="#deletar<?=$row['idCadastro']?>" data-whatever="@mdo">Deletar</button>
+    </td>
   </tr>
-<?php endforeach ?>
+<?php
+
+
+
+
+ endforeach ?>
 
   </tbody>
 </table>
