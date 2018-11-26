@@ -44,6 +44,39 @@ class Cliente
             echo 'Error: ' . $e->getMessage();
         }
     }
+    function enviar_senhaCliente($email){
+        $link = new linkBanco();
+        $pdo = ($link->linkBanco());
+        $consulta = $pdo->query("SELECT idCadastro,emailCadastro,senhaCadastro FROM cadastro WHERE emailCadastro = '$email'");
+        $linha = $consulta->fetch(PDO::FETCH_ASSOC);
+       $id = $linha['idCadastro'];
+       $novaSenha = rand(999, 99999);
+       $novaSenha_hash = md5($novaSenha);
+        if($linha['emailCadastro'] == $email){
+                //query para dar update no banco os dados recebidos pela funcao
+                $stmt = $pdo->prepare("UPDATE cadastro SET senhaCadastro = :novaSenha WHERE idCadastro = :id");
+                $stmt->execute(array(':novaSenha'   => $novaSenha_hash,':id' => $id));
+                
+                $to      = $email;
+                $subject = 'Resetar senha';
+                $message = 'Sua nova senha: ' . $novaSenha;
+                $headers = 'From: fullbuster.andre@gmail.com' . "\r\n" .
+                'Reply-To: fullbuster.andre@gmail.com' . "\r\n" .
+                'X-Mailer: PHP/' . phpversion();
+
+            mail($to, $subject, $message, $headers);
+            $result='<link rel="stylesheet" href="css/bootstrap.css" type="text/css" /><div class="alert alert-successs" role="alert">
+            E-mail enviado, consulte-o para ter acesso a sua senha! Voltar a pagina princial <a href="index.php" class="alert-link"> HOME</a>.
+            </div>';
+            echo $result;
+        } else{
+
+            $result='<link rel="stylesheet" href="css/bootstrap.css" type="text/css" /><div class="alert alert-danger" role="alert">
+               E-mail nÃ£o cadastrado, tente outros! Voltar a pagina princial <a href="index.php" class="alert-link"> HOME</a>.
+               </div>';
+        }
+
+    }
     function gravarCliente($nome,$telefone,$nascimento,$rg,$cpf,$email,$senha)//Metodo INSERT no banco
     {
 
@@ -53,7 +86,8 @@ class Cliente
             $consulta = $pdo->query("SELECT nomeCadastro,telefoneCadastro,rgCadastro,cpfCadastro,emailCadastro FROM cadastro WHERE nomeCadastro ='$nome' OR telefoneCadastro='$telefone' OR rgCadastro='$rg' OR cpfCadastro='$cpf';"); // Faz a consulta de Query
             $linha = $consulta->fetch(PDO::FETCH_ASSOC); // Coloca em uma variavel o resultado da consulta
            //Condicao para gravar no banco os dados 
-            if($linha['nomeCadastro'] == $nome || $linha['telefoneCadastro'] == $telefone || $linha['rgCadastro'] == $rg || $linha['cpfCadastro'] == $cpf){ // Faz a comparação do resultado da consulta com a variavel a ser cadastrada
+            
+           if($linha['nomeCadastro'] == $nome || $linha['telefoneCadastro'] == $telefone || $linha['rgCadastro'] == $rg || $linha['cpfCadastro'] == $cpf){ // Faz a comparaï¿½ï¿½o do resultado da consulta com a variavel a ser cadastrada
                //Mensagem de erro no cadastro
                $result='<link rel="stylesheet" href="css/bootstrap.css" type="text/css" /><div class="alert alert-danger" role="alert">
                Alguns dados ja cadastrados, tente outros! Voltar a pagina princial <a href="index.php" class="alert-link"> HOME</a>.
@@ -103,7 +137,7 @@ class Cliente
                 $stmt = $pdo->prepare("UPDATE cadastro SET nomeCadastro = :nome , telefoneCadastro = :telefone ,nascimentoCadastro = :nascimento , rgCadastro = :rg, cpfCadastro = :cpf , emailCadastro = :email WHERE idCadastro = '$id'");
                 $stmt->execute(array(':nome'   => $nome,':telefone' => $telefone,':nascimento'   => $nascimento,':rg'   => $rg,':cpf'   => $cpf,':email'   => $email));
                 echo'<link rel="stylesheet" href="css/bootstrap.css" type="text/css" /><div class="alert alert-success" role="alert">
-               Atualizado com sucesso, <a href="login.php" class="alert-link"> CLIQUE AQUI!</a>
+               Atualizado com sucesso, <a href="lerCliente.php" class="alert-link"> CLIQUE AQUI!</a>
                </div>';
             }catch(PDOException $e){
                     echo 'Error: ' . $e->getMessage();
@@ -185,7 +219,7 @@ class Cliente
    
     if (isset($submit)) {
         if (! in_array($fileExtension,$fileExtensions)) {
-            $errors[] = "Esse tipo de arquivo não é aceito, por favor carregie um JPEG ou PNG";
+            $errors[] = "Esse tipo de arquivo nï¿½o ï¿½ aceito, por favor carregie um JPEG ou PNG";
         }
         if ($fileSize > 2000000) {
             $errors[] = "Esse arquivo tem mais de 2MB. Lementamos, porem o arquivo dever ter menos de 2MB";
@@ -221,4 +255,4 @@ class Cliente
 
     }
 
-    }
+}

@@ -23,7 +23,36 @@
 
 /*//////////////////////////////////////////////////////////////////
 [ RESTYLE TAG ]*/
-
+.principal{
+  margin-left:25%;	
+  margin-top:5%;
+  padding-left:8%;
+  height:50%;
+  width:50%;
+  background-color:#c0c0c0;
+  position:relative;
+  border: 2px solid #c0c0c0;
+  border-radius: 20px;
+  
+  }
+  .principal a{
+    position:relative;
+    display: inline;
+    }
+  .principal form{
+    
+    position:relative;
+  }
+  
+  .lerCliente a{
+    position:relative;
+    display: inline;
+    
+  }
+  .principal .content{
+  margin-left: 20%;
+  }
+  
 * {
 	margin: 0px; 
 	padding: 0px; 
@@ -525,4 +554,12 @@ iframe {
     padding-left: 15px;
     padding-right: 15px;
   }
+}
+
+.page-footer{
+background-color: black;
+
+}
+.footer-copyright{
+background-color: #333333;
 }

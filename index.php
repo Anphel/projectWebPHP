@@ -55,11 +55,11 @@
 						</button>
 					</div>
 					<div class="text-center w-full p-t-25 p-b-230">
-						<a href="#" class="txt1">
+						<a class="txt1" href="#" data-toggle="modal" data-target="#enviar_senhaModal" data-whatever="@mdo" >
 							Esqueceu usuário/senha?
 						</a>
 					</div><div class="text-center w-full">
-						<a class="txt1" href="#" data-toggle="modal" data-target="#atualizarModal" data-whatever="@mdo" >
+						<a class="txt1" href="#" data-toggle="modal" data-target="#cadastroModal" data-whatever="@mdo" >
 							Crie uma conta
 							<i class="fa fa-long-arrow-right"></i>						
 						</a>
@@ -73,7 +73,7 @@
 	
 	
 <!--modal Cadastro -->
-<div class="modal fade" id="atualizarModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="cadastroModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -105,6 +105,32 @@
   </div>
 </div>
 <!--modal Cadastro -->
+<!--modal Enviar Senha -->
+<div class="modal fade" id="enviar_senhaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Cadastro</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="processaEnviarSenha.php">
+<div class="form-group">
+<input  type="text" class="form-control" placeholder="E-mail" name="email" required autofocus ><br>
+</div>
+		<div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+        <input type="submit" class="btn btn-primary" id='enviar_senha' name='btnEnviarSenha'>
+        </div>
+      </form>
+      </div>
+      
+    </div>
+  </div>
+</div>
+<!--modal Enviar Senha -->
 	
 <!--===============================================================================================-->	
 	<script src="vendor/jquery/jquery-3.2.1.min.js"></script>
