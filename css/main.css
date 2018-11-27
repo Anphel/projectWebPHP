@@ -4,7 +4,16 @@
 
 /*//////////////////////////////////////////////////////////////////
 [ FONT ]*/
+body {
+  width: 100%;
+  height: auto;
+}
 
+@media (min-width: 992px) {
+  body {
+    padding: 0px;
+  }
+}
 @font-face {
   font-family: Montserrat-Regular;
   src: url('../fonts/montserrat/Montserrat-Regular.ttf'); 
@@ -555,11 +564,39 @@ iframe {
     padding-right: 15px;
   }
 }
-
+/*//////////////////////////////////////////////////////////////////
+[ FOOTER ]*/
 .page-footer{
-background-color: black;
+background-color: #505050 ;
 
 }
 .footer-copyright{
 background-color: #333333;
 }
+.social{
+  margin-left: 44.5%;
+
+}
+.social i{
+  margin-left: 1.5%;
+  margin-bottom: 3%;
+      -webkit-transition: .2s all;   
+    -webkit-transition-delay: 0.2s; 
+    -moz-transition: .2s all;   
+    -moz-transition-delay: 0.2s; 
+    -ms-transition: .2s all;   
+    -ms-transition-delay: 0.2s; 
+    -o-transition: .2s all;   
+    -o-transition-delay: 0.2s; 
+    transition: .2s all;   
+    transition-delay: 0.2s; 
+}
+.social i:hover{
+    transform: scale(1.05);
+    -webkit-transition-delay: 0s;
+    -moz-transition-delay: 0s;
+    -ms-transition-delay: 0s;
+    -o-transition-delay: 0s;
+    transition-delay: 0s;
+}
+

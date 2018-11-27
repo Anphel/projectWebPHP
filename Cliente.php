@@ -1,6 +1,15 @@
 <?php
-include ('linkBanco.php');
-class Cliente
+class linkBanco
+{
+    function linkBanco() {
+        $user = 'id7917802_anphel';//usuario do banco
+        $pass = 'QWEasd123!';//senha do banco
+        $pdo = new PDO('mysql:host=localhost;dbname=id7917802_bdprincipal000', $user, $pass);//objeto com PDO
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);  
+        return $pdo;
+    }
+}
+class Cliente extends linkBanco
 {
     //Classe com os metodos e atributos referente ao cliente
     //Atributos
@@ -15,9 +24,8 @@ class Cliente
 
     function logarCliente($nome,$senha)  //Metodo para logar no sistema
     {
-        try{
-            $link = new linkBanco();
-            $pdo = ($link->linkBanco());
+            $obj = new Cliente;
+            $pdo = ($obj->linkBanco());
             //Query que busca o login e a senha
             $consulta = $pdo->query("SELECT idCadastro,nomeCadastro,senhaCadastro,diretorio_fotoCadastro,tipoCadastro FROM cadastro WHERE nomeCadastro = '$nome' AND senhaCadastro = '$senha';") or die("Erro ao encontrar!");
             //Atrubui o resultado da busca em $linha
@@ -30,23 +38,16 @@ class Cliente
                 $_SESSION['UsuarioTipo'] = $linha['tipoCadastro'];
                 $_SESSION['UsuarioNome'] = $linha['nomeCadastro'];
                 $_SESSION['UsuarioFoto'] = $linha['diretorio_fotoCadastro'];//Session para armazenar o caminho da foto de perfil
-                header("Location:login.php"); exit;
+                return true;
                 }else{
                 //Caso nao encontre o login ou a senha
-                $result='<link rel="stylesheet" href="css/bootstrap.css" type="text/css" />
-               <div class="alert alert-danger" role="alert">
-               '.$nome.' inexistente e/ou senha incorreta, tente outro! Voltar a pagina princial <a href="index.php" class="alert-link"> HOME</a>.
-               </div>';
-                echo $result;
-                die();
+                return false;
             }
-        }catch(PDOException $e) { //cath para mostrar na tela mensagem de erro caso ocorra
-            echo 'Error: ' . $e->getMessage();
-        }
+        
     }
     function enviar_senhaCliente($email){
-        $link = new linkBanco();
-        $pdo = ($link->linkBanco());
+        $obj = new Cliente;
+        $pdo = ($obj->linkBanco());
         $consulta = $pdo->query("SELECT idCadastro,emailCadastro,senhaCadastro FROM cadastro WHERE emailCadastro = '$email'");
         $linha = $consulta->fetch(PDO::FETCH_ASSOC);
        $id = $linha['idCadastro'];
@@ -78,70 +79,62 @@ class Cliente
 
     }
     function gravarCliente($nome,$telefone,$nascimento,$rg,$cpf,$email,$senha)//Metodo INSERT no banco
-    {
-
-        try {
-            $link = new linkBanco(); // Faz o link com o banco
-            $pdo = ($link->linkBanco());
-            $consulta = $pdo->query("SELECT nomeCadastro,telefoneCadastro,rgCadastro,cpfCadastro,emailCadastro FROM cadastro WHERE nomeCadastro ='$nome' OR telefoneCadastro='$telefone' OR rgCadastro='$rg' OR cpfCadastro='$cpf';"); // Faz a consulta de Query
-            $linha = $consulta->fetch(PDO::FETCH_ASSOC); // Coloca em uma variavel o resultado da consulta
-           //Condicao para gravar no banco os dados 
-            
-           if($linha['nomeCadastro'] == $nome || $linha['telefoneCadastro'] == $telefone || $linha['rgCadastro'] == $rg || $linha['cpfCadastro'] == $cpf){ // Faz a compara��o do resultado da consulta com a variavel a ser cadastrada
-               //Mensagem de erro no cadastro
-               $result='<link rel="stylesheet" href="css/bootstrap.css" type="text/css" /><div class="alert alert-danger" role="alert">
-               Alguns dados ja cadastrados, tente outros! Voltar a pagina princial <a href="index.php" class="alert-link"> HOME</a>.
-               </div>';
-                 echo $result;
-                    die();
-                }
-                else{
-
+    {   
+        $obj = new Cliente();
+           if($obj->verificaCliente($nome,$telefone,$rg,$cpf) == true){
                 //Inserindo no banco usando statement pdo
+                $pdo = ($obj->linkBanco());
                 $stmt = $pdo->prepare('INSERT INTO cadastro(nomeCadastro,telefoneCadastro,nascimentoCadastro,rgCadastro,cpfCadastro,senhaCadastro,diretorio_fotoCadastro,tipoCadastro,emailCadastro) VALUES(:nome,:telefone,:nascimento,:rg,:cpf,:senha,:diretorio_fotoCadastro,:tipoCadastro,:email)');
                 $stmt->execute(array(':nome' => $nome, ':telefone' => $telefone, ':nascimento' => $nascimento, ':rg' => $rg, ':cpf' => $cpf, 'senha' => $senha,':diretorio_fotoCadastro' => 'https://anphel2.000webhostapp.com/upload/DefaultUser.jpg', ':tipoCadastro' => 1, ':email' => $email));
-                $result='<link rel="stylesheet" href="css/bootstrap.css" type="text/css" /><div class="alert alert-success"  role="alert">'.$nome.'
-                cadastrado com sucesso! Voltar a pagina inicial<a href="index.php" class="alert-link"> HOME</a>.
-               </div>';
-                echo $result;
-                //Mensagem de cadastro concluido 
+                if ($obj->logarCliente($nome, $senha) == true){//loga o cliente apos fazer o cadastro
+                    return true;//retorna bool
+                    }
+                }
+            else{
+                 return false;
+               //Mensagem de erro no cadastro
                 }
         }
-        catch(PDOException $e) {
-            //Mostrar na tela exception 
-            echo 'Error: ' . $e->getMessage();
-        }
+    
+        function verificaCliente($nome,$telefone,$rg,$cpf){
+            $obj = new Cliente();
+            $pdo = ($obj->linkBanco());
+            $consulta = $pdo->query("SELECT nomeCadastro,telefoneCadastro,rgCadastro,cpfCadastro,emailCadastro FROM cadastro WHERE nomeCadastro ='$nome' OR telefoneCadastro='$telefone' OR rgCadastro='$rg' OR cpfCadastro='$cpf';"); // Faz a consulta de Query
+            $linha = $consulta->fetch(PDO::FETCH_ASSOC); // Coloca em uma variavel o resultado da consulta
+            if($linha['nomeCadastro'] == $nome || $linha['telefoneCadastro'] == $telefone || $linha['rgCadastro'] == $rg || $linha['cpfCadastro'] == $cpf){
+                return false;
+            }else{
+                return true;
+            }
+    
     }
     function lerCliente() //Metodo para SELECT do banco
     {
-       
-        $link = new linkBanco();
-        $pdo = ($link->linkBanco());
+        $obj = new Cliente;
+        $pdo = ($obj->linkBanco());
         $stmt = $pdo->prepare('SELECT * FROM cadastro;');
         $query = "";
         $stmt->execute(array($query));
-        return $data = $stmt->fetchAll();
+        return $data = $stmt->fetchAll();//retorna um array com toda a consulta no banco
 
     }
     function atualizarCliente($id,$nome,$telefone,$nascimento,$rg,$cpf,$email) //Metodo para UPDATE no banco
     {
-        $link = new linkBanco();
-        $pdo = ($link->linkBanco());
+        $obj = new Cliente;
+        $pdo = ($obj->linkBanco());
         $consulta = $pdo->query('SELECT idCadastro FROM cadastro;');//realiza select do id para comparar com o id digitado
         $controlador = False;//variavel controladora para verificar se o id foi encontrado
         while ($linha = $consulta->fetch(PDO::FETCH_ASSOC)) {
             if ($linha['idCadastro'] == $id){
                 $controlador = True;//atribui o valor para a variavel controladora
-            try {
+            
                 //query para dar update no banco os dados recebidos pela funcao
                 $stmt = $pdo->prepare("UPDATE cadastro SET nomeCadastro = :nome , telefoneCadastro = :telefone ,nascimentoCadastro = :nascimento , rgCadastro = :rg, cpfCadastro = :cpf , emailCadastro = :email WHERE idCadastro = '$id'");
                 $stmt->execute(array(':nome'   => $nome,':telefone' => $telefone,':nascimento'   => $nascimento,':rg'   => $rg,':cpf'   => $cpf,':email'   => $email));
                 echo'<link rel="stylesheet" href="css/bootstrap.css" type="text/css" /><div class="alert alert-success" role="alert">
                Atualizado com sucesso, <a href="lerCliente.php" class="alert-link"> CLIQUE AQUI!</a>
                </div>';
-            }catch(PDOException $e){
-                    echo 'Error: ' . $e->getMessage();
-                }
+            
             }
         }
         if($controlador == False){
@@ -150,8 +143,8 @@ class Cliente
       }
     function deletarCliente($id)  //Metodo para DELET no banco
     { 
-        $link = new linkBanco();
-        $pdo = ($link->linkBanco());
+        $obj = new Cliente;
+        $pdo = ($obj->linkBanco());
         $consulta = $pdo->query('SELECT idCadastro FROM cadastro;');//realiza select do id para comparar com o id digitado
         $controlador = False;//variavel controladora para verificar se o id foi encontrado
         
@@ -176,8 +169,8 @@ class Cliente
         }
     }
     function add_saldoCliente($id,$saldo){
-        $link = new linkBanco(); // Faz o link com o banco
-        $pdo = ($link->linkBanco());
+        $obj = new Cliente;
+        $pdo = ($obj->linkBanco());
         $consulta = $pdo->query("SELECT idCadastro,saldoCadastro FROM cadastro WHERE idCadastro ='$id'"); // Faz a consulta de Query
         $controlador = False;//variavel controladora para verificar se o id foi encontrado
         $linha = $consulta->fetch(PDO::FETCH_ASSOC); // Coloca em uma variavel o resultado da consulta
@@ -214,9 +207,6 @@ class Cliente
 
     $uploadPath = $currentDir . $uploadDirectory . basename($fileName); 
 
-   // $pontos = array("C:","\x","ampp\htdocs");
-   // $result = str_replace($pontos, "", $uploadPath);//funcao para retirar parte do caminho que vai ser salvo no banco, pois o caminho completo nao funciona em localhost
-   
     if (isset($submit)) {
         if (! in_array($fileExtension,$fileExtensions)) {
             $errors[] = "Esse tipo de arquivo n�o � aceito, por favor carregie um JPEG ou PNG";
@@ -227,9 +217,8 @@ class Cliente
         if (empty($errors)) {
             $didUpload = move_uploaded_file($fileTmpName, $uploadPath);
             if ($didUpload) {
-                $link = new linkBanco();
-                $pdo = ($link->linkBanco());
-                try {
+                $obj = new Cliente;
+                $pdo = ($obj->linkBanco());
                 //query para dar update no banco os dados recebidos pela funcao
                 $diretorio = "https://anphel2.000webhostapp.com/upload/".$fileName;
                 $stmt = $pdo->prepare("UPDATE cadastro SET diretorio_fotoCadastro = :diretorio  WHERE idCadastro = :id");
@@ -239,9 +228,7 @@ class Cliente
                O Arquivo, ' . basename($fileName) . ' foi salvo <a href="login.php" class="alert-link"> CLIQUE AQUI!</a>
                </div>';
 
-            }catch(PDOException $e){
-                   // echo 'Error: ' . $e->getMessage();
-                }
+            }
                 
             } else {
                 echo "Ocorreu algum erro, tente novamente ou contate um administrador.";
@@ -253,6 +240,5 @@ class Cliente
         }
     }
 
-    }
-
 }
+
